@@ -1,0 +1,26 @@
+#!/bin/bash
+
+# Open a remote terminal session or focus an existing one. The
+# argument is the destination system. It also acts as a key to
+# terminal sessions already open.
+function focusOrOpen {
+  # take the destination from the first argument
+  local destination=$1
+  # mangle the destination into a window class
+  local class="remotehost${destination}"
+  # search for a window with the target class
+  local window=$(xdotool search --onlyvisible --class "$class" | sort | head -1)
+  if [ "$window" == "" ]; then
+    # launch gnome terminal
+    # own class for later lookup. It immediately invokes ssh to the remote host
+    # gnome terminal emits a bunch of noise to std err so just consume it
+    gnome-terminal --disable-factory --class="$class" -x ssh -t $destination 2> /dev/null &
+  else
+    # focus the found window
+    xdotool windowfocus $window
+  fi
+}
+
+focusOrOpen $1
+
+
