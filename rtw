@@ -17,7 +17,7 @@ function focusOrOpen {
     gnome-terminal --disable-factory --class="$class" -x ssh -t $destination 2> /dev/null &
   else
     # focus the found window
-    xdotool windowfocus $window
+    xdotool windowactivate $window
   fi
 }
 
