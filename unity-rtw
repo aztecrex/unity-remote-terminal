@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# get my own name as entered by the invoker
+me=$0
+dest=$1
+
+# locate the rtw command co-located with me
+rtw="$(dirname $(readlink -f $me))/rtw"
+
+if [ "$dest" == "" ]; then
+  dest=$(zenity --entry --text='Remote host')
+fi
+
+$rtw $dest
+
