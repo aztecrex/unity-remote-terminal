@@ -1,0 +1,46 @@
+
+function get_rootdir {
+  # package scripts are in root
+  echo $1
+}
+
+function get_name {
+  echo "unity-remote-terminal-$(cat $1/version)"
+}
+
+
+function get_builddir {
+  echo "$(get_rootdir $1)/working/$(get_name $1)"
+}
+
+function get_tarball {
+  echo "$(get_rootdir $1)/$(get_name $1).tgz"
+}
+
+function do_clean {
+  local builddir=$(get_builddir $1)
+  local tarball=$(get_tarball $1)
+  if [ -d $builddir ]; then
+    find $builddir -delete
+  fi
+  if [ -f $tarball ]; then
+    rm $tarball
+  fi
+}
+
+function do_package {
+  local name=$(get_name $1)
+  local builddir=$(get_builddir $1)
+  local tarball=$(get_tarball $1)
+  local rootdir=$(get_rootdir $1)
+
+  do_clean $1
+
+  mkdir -p $builddir
+  cp -a $rootdir/src $rootdir/install* README.md LICENSE NOTICE $builddir/
+
+  pushd $builddir/.. > /dev/null
+  tar -czf $rootdir/$name.tgz $name
+  popd > /dev/null
+}
+
