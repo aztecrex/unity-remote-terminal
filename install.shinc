@@ -1,0 +1,22 @@
+
+function do_install {
+  local fromdir=${1:-.}
+  local todir=${2:-/usr/local}
+  local user=${3:-root}
+  local group=${4:-$user}
+
+  local runtime=()
+  # define files to install here
+  runtime+=("$fromdir/src/rtw")
+  runtime+=("$fromdir/src/unity-rtw")
+
+  if [ ! -d $todir ]; then
+    mkdir -p $todir
+    chown $user $todir
+    chgrp $group $todir
+    chmod 755 $todir
+  fi
+ 
+  install -g $group -o $user -m 0755 "${runtime[@]}" $todir
+}
+

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+medir=$(dirname $(readlink -f $0))
+
+. $medir/install.shinc
+do_install $medir ~/bin/ $USER
+
